@@ -10,10 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-          with:
-            fetch-depth: 0
-            token: ${{ secrets.LERNA_PUBLISH_BOT_GITHUB_TOKEN }}
-            repository: cBioPortal/cbioportal-frontend
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.LERNA_PUBLISH_BOT_GITHUB_TOKEN }}
+          repository: cBioPortal/cbioportal-frontend
       # lerna needs tags to be able to determine what's changed
       - run: git fetch origin +refs/tags/*:refs/tags/*
       - uses: actions/setup-node@v1
