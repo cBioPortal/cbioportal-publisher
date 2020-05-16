@@ -20,7 +20,7 @@ jobs:
         with:
           node-version: '8.12.0'
           registry-url: 'https://registry.npmjs.org'
-      - run: yarn policies set-version 1.21.1
+      - run: yarn policies set-version 1.22.4
       - run: yarn
       - run: yarn updatePackageVersion
       - run: yarn buildModules
