@@ -18,9 +18,9 @@ jobs:
       - run: git fetch origin +refs/tags/*:refs/tags/*
       - uses: actions/setup-node@v1
         with:
-          node-version: '8.12.0'
+          node-version: '15.2.1'
           registry-url: 'https://registry.npmjs.org'
-      - run: yarn policies set-version 1.22.4
+      - run: yarn policies set-version 1.22.5
       - run: yarn
       - run: yarn updatePackageVersion
       - run: yarn buildModules
