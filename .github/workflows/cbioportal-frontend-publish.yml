@@ -4,6 +4,7 @@ name: cBioPortal Frontend Module Publish
 on:
   repository_dispatch:
     types: [cbioportal-frontend-package-update]
+  workflow_dispatch:
 
 jobs:
   build:
