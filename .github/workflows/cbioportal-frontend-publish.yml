@@ -9,22 +9,25 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           token: ${{ secrets.LERNA_PUBLISH_BOT_GITHUB_TOKEN }}
           repository: cBioPortal/cbioportal-frontend
       # lerna needs tags to be able to determine what's changed
       - run: git fetch origin +refs/tags/*:refs/tags/*
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v4
         with:
-          node-version: '15.2.1'
+          node-version: '22.18.0'
           registry-url: 'https://registry.npmjs.org'
-      - run: yarn policies set-version 1.22.5
+      - run: yarn policies set-version 1.22.22
       - run: yarn --frozen-lockfile
       - run: yarn updatePackageVersion
       - run: yarn buildModules
-      - run: yarn publishModules
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      # Install lerna 8.x which supports OIDC trusted publishing
+      - run: npm install -g lerna@8
+      - run: lerna publish from-git --yes --provenance
