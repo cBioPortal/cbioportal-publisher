@@ -28,6 +28,4 @@ jobs:
       - run: yarn --frozen-lockfile
       - run: yarn updatePackageVersion
       - run: yarn buildModules
-      # Install lerna 8.x which supports OIDC trusted publishing
-      - run: npm install -g lerna@8
-      - run: lerna publish from-git --yes --provenance
+      - run: yarn publishModules
