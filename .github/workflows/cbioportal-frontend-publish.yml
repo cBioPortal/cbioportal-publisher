@@ -29,3 +29,5 @@ jobs:
       - run: yarn updatePackageVersion
       - run: yarn buildModules
       - run: yarn publishModules
+        env:
+          NPM_CONFIG_PROVENANCE: 'true'
