@@ -28,6 +28,6 @@ jobs:
       - run: yarn --frozen-lockfile
       - run: yarn updatePackageVersion
       - run: yarn buildModules
-      - run: yarn publishModules
+      - run: npx lerna@9 publish from-git --yes --concurrency 1
         env:
           NPM_CONFIG_PROVENANCE: 'true'
