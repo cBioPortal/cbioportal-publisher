@@ -35,6 +35,13 @@ jobs:
       - run: yarn updatePackageVersion
         if: ${{ !inputs.skip_version_update }}
       - run: yarn buildModules
+      # Normal publish: uses lerna publish from-git (requires version tags)
       - run: yarn publishModules
+        if: ${{ !inputs.skip_version_update }}
+        env:
+          NPM_CONFIG_PROVENANCE: 'true'
+      # Workaround publish: uses lerna publish from-package (compares local versions against npm registry, no tags needed)
+      - run: npx lerna publish from-package --yes --concurrency 1
+        if: ${{ inputs.skip_version_update }}
         env:
           NPM_CONFIG_PROVENANCE: 'true'
