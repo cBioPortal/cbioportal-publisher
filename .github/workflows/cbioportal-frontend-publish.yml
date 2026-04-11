@@ -5,6 +5,15 @@ on:
   repository_dispatch:
     types: [cbioportal-frontend-package-update]
   workflow_dispatch:
+    inputs:
+      skip_version_update:
+        description: 'Skip yarn updatePackageVersion step (publish packages as-is without patching version)'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - 'false'
+          - 'true'
 
 jobs:
   build:
@@ -27,6 +36,7 @@ jobs:
       - run: yarn policies set-version 1.22.22
       - run: yarn --frozen-lockfile
       - run: yarn updatePackageVersion
+        if: ${{ github.event.inputs.skip_version_update != 'true' }}
       - run: yarn buildModules
       - run: yarn publishModules
         env:
