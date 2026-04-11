@@ -43,7 +43,11 @@ jobs:
       # Workaround publish: uses lerna publish from-package (compares local versions against npm registry, no tags needed)
       # Provenance is disabled because the packages declare repository.url pointing to cbioportal-frontend,
       # which would fail sigstore verification when the workflow runs in cbioportal-publisher.
+      # ACTIONS_ID_TOKEN_REQUEST_URL/TOKEN are blanked out to prevent lerna v9 from auto-enabling provenance
+      # via the GitHub Actions OIDC token, which overrides NPM_CONFIG_PROVENANCE.
       - run: npx lerna publish from-package --yes --concurrency 1
         if: ${{ inputs.skip_version_update }}
         env:
           NPM_CONFIG_PROVENANCE: 'false'
+          ACTIONS_ID_TOKEN_REQUEST_URL: ''
+          ACTIONS_ID_TOKEN_REQUEST_TOKEN: ''
