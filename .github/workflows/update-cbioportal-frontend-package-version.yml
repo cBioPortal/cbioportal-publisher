@@ -1,5 +1,5 @@
-# Update package versions under cBioPortal/cbioportal-frontend/packages directory and push to master
-name: update-cbioportal-frontend-package-version
+# Update package versions under cBioPortal/cbioportal-frontend/packages directory
+name: Update cBioPortal Frontend Package Version
 
 on:
   repository_dispatch:
@@ -10,7 +10,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: read
     steps:
       - uses: actions/checkout@v4
         with:
@@ -26,10 +26,3 @@ jobs:
       - run: yarn policies set-version 1.22.22
       - run: yarn --frozen-lockfile
       - run: yarn updatePackageVersion
-      - name: Commit and push version changes to master
-        run: |
-          git config user.email "actions@github.com"
-          git config user.name "GitHub Actions"
-          git add -A
-          git diff --cached --quiet || git commit -m "chore: update package versions"
-          git push origin HEAD:master
