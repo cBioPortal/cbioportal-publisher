@@ -1,5 +1,5 @@
-# Publish modules under cBioPortal/cbioportal-frontend/packages directory to npm registry
-name: cBioPortal Frontend Module Publish
+# Update package versions under cBioPortal/cbioportal-frontend/packages directory and push to master
+name: update-cbioportal-frontend-package-version
 
 on:
   repository_dispatch:
@@ -10,8 +10,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
-      id-token: write
+      contents: write
     steps:
       - uses: actions/checkout@v4
         with:
@@ -27,7 +26,10 @@ jobs:
       - run: yarn policies set-version 1.22.22
       - run: yarn --frozen-lockfile
       - run: yarn updatePackageVersion
-      - run: yarn buildModules
-      - run: yarn publishModules
-        env:
-          NPM_CONFIG_PROVENANCE: 'true'
+      - name: Commit and push version changes to master
+        run: |
+          git config user.email "actions@github.com"
+          git config user.name "GitHub Actions"
+          git add -A
+          git diff --cached --quiet || git commit -m "chore: update package versions"
+          git push origin HEAD:master
