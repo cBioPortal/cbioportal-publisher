@@ -43,10 +43,12 @@ jobs:
       # Workaround publish: uses lerna publish from-package (compares local versions against npm registry, no tags needed)
       # Provenance is disabled because the packages declare repository.url pointing to cbioportal-frontend,
       # which would fail sigstore verification when the workflow runs in cbioportal-publisher.
-      # env -u completely unsets ACTIONS_ID_TOKEN_REQUEST_URL/TOKEN from the child process so that lerna/npm
-      # cannot auto-detect the GitHub Actions OIDC endpoint and enable provenance automatically.
-      # (Setting them to '' via env: is insufficient — the runner still exposes the token URL.)
-      - run: env -u ACTIONS_ID_TOKEN_REQUEST_URL -u ACTIONS_ID_TOKEN_REQUEST_TOKEN npx lerna publish from-package --yes --concurrency 1
+      # env -u completely unsets GITHUB_ACTIONS and the OIDC vars from the child process so that neither lerna
+      # nor npm can auto-detect the GitHub Actions OIDC endpoint and enable provenance. GITHUB_ACTIONS must also
+      # be removed because lerna v9 enters its OIDC code path whenever GITHUB_ACTIONS=true — even when
+      # ACTIONS_ID_TOKEN_REQUEST_URL is absent — causing it to fetch "undefined" as the token URL and fail with E404.
+      # CI=true (still present) keeps lerna in CI mode (skips interactive prompts, etc.).
+      - run: env -u ACTIONS_ID_TOKEN_REQUEST_URL -u ACTIONS_ID_TOKEN_REQUEST_TOKEN -u GITHUB_ACTIONS npx lerna publish from-package --yes --concurrency 1
         if: ${{ inputs.skip_version_update }}
         env:
           NPM_CONFIG_PROVENANCE: 'false'
